@@ -1,7 +1,7 @@
 (function ($) {
     $.fn.initChat = function (options) {
 
-    console.log(21);
+    console.log(1);
         var defaults = {
 
             user_info: {
