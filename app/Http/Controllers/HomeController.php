@@ -49,7 +49,9 @@ class HomeController extends Controller
 
         $context = stream_context_create($options);
         $result = file_get_contents($url, false, $context);
-
+        $result = json_decode($result);
+        var_dump($result);
+        //TO DO -> continue that shit  and make it clear 
         if ($result === FALSE) { /* Handle error */
         }
         else{
