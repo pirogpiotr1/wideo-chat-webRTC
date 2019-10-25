@@ -18,4 +18,5 @@ $obj = new \App\Http\Controllers\HomeController();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/', 'HomeController@index')->name('home');
+Route::post('/home/start_listening', 'HomeController@startListening');
 

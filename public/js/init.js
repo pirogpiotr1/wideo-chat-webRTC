@@ -7,6 +7,9 @@
             user_info: {
                 name: null,
                 user_id: null
+            },
+            ajax:{
+                startListening: null
             }
 
         };
@@ -28,7 +31,7 @@
         }
 
         var functions = {
-            waitForConnect: function () {
+            waitForConnect: function (room) {
                 vars.drone.on('open', error => {
                     if (error) {
                         return console.error(error);
@@ -169,10 +172,26 @@
 
                 functions.insertMessageToDOM({content: 'chat URL is ' + location.href });
             },
+            startListening: function(){
+              $('#start-listening').on('click', function () {
+
+                  $.ajax({
+                      type:'POST',
+                      url:defaults.ajax.startListening,
+                      data: {
+                          'room_name': vars.roomName
+                      },
+                      success:function(data){
+                          console.log(data.success);
+                      }
+
+                  });
+              });
+            },
             init: function () {
                 functions.waitForConnect();
                 functions.sendMessageEvent();
-
+                functions.startListening();
             }
         };
 
