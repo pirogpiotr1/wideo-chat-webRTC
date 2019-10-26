@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Auth;
 use DB;
+use App\Common;
 
 class HomeController extends Controller
 {
@@ -25,21 +26,27 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $name = Auth::user()->name . '_'.Auth::user()->id;
 
-        return view('home');
+        if( ! DB::table('chat')->where('id_owner', Auth::user()->id)->first() ) {
+            DB::table('chat')->insert([
+                'name' => $name,
+                'id_owner' => Auth::user()->id
+            ]);
+
+        }
+
+        return view('home')->with('room_name', $name );
     }
 
     /** AJAX SZUKAJ POKOJÓW
      * @param Request $request
      */
     public function startListening(Request $request){
-        $webRTC = new webRTCController();
+        header('Content-Type: application/json');
         $roomName = $request->input('room_name');
-
-
-        $room_name = "notifications";
-        $url = "https://api2.scaledrone.com/" . CHANNEL_ID. "/rooms";
-
+        $url = "https://api2.scaledrone.com/" . config('constants.CHANNEL_ID'). "/rooms";
+     //   var_dump($url);
         $options = array(
             'http' => array(
                 'header' => "Content-type: application/json\r\n",
@@ -49,22 +56,27 @@ class HomeController extends Controller
 
         $context = stream_context_create($options);
         $result = file_get_contents($url, false, $context);
-        $result = json_decode($result);
-        var_dump($result);
-        //TO DO -> continue that shit  and make it clear 
+
+        $room = null;
         if ($result === FALSE) { /* Handle error */
+            echo json_encode([
+                'success' => 'FALSE'
+            ]);
         }
         else{
-
+            $result = json_decode($result);
+            foreach( $result as $row ){
+                if($row != $roomName){
+                    $room = $row;
+                    break;
+                }
+            }
         }
 
 
-        DB::table('users')
-            ->where('id', Auth::user()->id)
-            ->update(['isListening' => '1']);
-
         echo json_encode([
-            'success' => true
+            'success' => 'OK',
+            'room_name' => $room
         ]);
     }
 }

@@ -5,8 +5,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-define("CHANNEL_ID", 'L0YEtshct5737BhN');
-define("SECRET_KEY", 'wK2iRF0BhflRKNlSIXIkGVte0MhW9IXZ');
+
 
 class webRTCController extends Controller
 {
@@ -17,16 +16,17 @@ class webRTCController extends Controller
      */
     public $client = null;
 
-    public static $auth = [
-        'channel_id' => CHANNEL_ID,
-        'secret_key' => SECRET_KEY
-    ];
+    public $auth =[];
 
     public function __construct()
     {
         $this->middleware('auth');
-        // $this->client = \ScaleDrone\Client::create($auth);
-       //  $this->client->rooms_list()
+        $this->auth = [
+            'channel_id' => config('constants.CHANNEL_ID'),
+            'secret_key' => config('constants.SECRET_KEY')
+        ];
+
+        $this->client = \ScaleDrone\Client::create($this->auth);
     }
 
     public function getCompleteListOfUsersAndRoms()

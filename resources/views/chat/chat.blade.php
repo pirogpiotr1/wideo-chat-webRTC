@@ -30,7 +30,8 @@
         $.fn.initChat({
             user_info:{
                 name: "{{ Auth::user()->name }}",
-                user_id: "{{ Auth::user()->id }}"
+                user_id: "{{ Auth::user()->id }}",
+                room_name : "{{$room_name}}"
             },
             ajax:{
                 startListening: '/home/start_listening'
