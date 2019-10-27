@@ -1,3 +1,42 @@
 .messages-inner{
     display: none;
 }
+.messages{
+    margin-bottom: 15px;
+}
+.message{
+    display: flex;
+    flex-direction: column;
+}
+.message__name{
+    color:#212529;
+    padding: 5px 10px;
+}
+.message__bubble{
+    background: #1d68a7;
+    border-radius: 15px;
+    width: max-content;
+    padding: 5px 10px;
+    color:#fff;
+}
+.message.message--mine{
+
+    color:#fff;
+    align-items: flex-start;
+}
+.message.message--mine .message__bubble{
+    background: #2d995b;
+}
+.message.message--theirs{
+    align-items: flex-end;
+}
+.no-visible{
+    visibility: hidden;
+}
+.RED{
+    color:#c51f1a;
+}
+
+.GREEN{
+    color: #2d995b;
+}

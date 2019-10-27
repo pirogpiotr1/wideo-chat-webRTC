@@ -6,7 +6,7 @@
     </form>
 </div>
 
-<template_message data-template="message">
+<template_message data-template="message" class="no-visible">
     <div class="message">
         <div class="message__name"></div>
         <div class="message__bubble"></div>

@@ -42,11 +42,12 @@ class HomeController extends Controller
     /** AJAX SZUKAJ POKOJÓW
      * @param Request $request
      */
-    public function startListening(Request $request){
+    public function startListening(Request $request)
+    {
         header('Content-Type: application/json');
         $roomName = $request->input('room_name');
-        $url = "https://api2.scaledrone.com/" . config('constants.CHANNEL_ID'). "/rooms";
-     //   var_dump($url);
+        $url = "https://api2.scaledrone.com/" . config('constants.CHANNEL_ID') . "/rooms";
+        //   var_dump($url);
         $options = array(
             'http' => array(
                 'header' => "Content-type: application/json\r\n",
@@ -62,21 +63,27 @@ class HomeController extends Controller
             echo json_encode([
                 'success' => 'FALSE'
             ]);
-        }
-        else{
+        } else {
             $result = json_decode($result);
-            foreach( $result as $row ){
-                if($row != $roomName){
+            foreach ($result as $row) {
+                if ($row != $roomName) {
                     $room = $row;
                     break;
                 }
             }
         }
 
+        if ($room) {
 
-        echo json_encode([
-            'success' => 'OK',
-            'room_name' => $room
-        ]);
+            echo json_encode([
+                'success' => 'OK',
+                'room_name' => $room
+            ]);
+       }else{
+            echo json_encode([
+                'success' => 'FALSE'
+
+            ]);
+        }
     }
 }
