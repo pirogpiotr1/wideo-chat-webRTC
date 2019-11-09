@@ -98,6 +98,7 @@
                     pc.onnegotiationneeded = () => {
                         pc.createOffer(functions.localDescCreated, error => console.error(error));
                     }
+
                     dataChannel = pc.createDataChannel('chat');
                     functions.setupDataChannel();
 
@@ -108,6 +109,21 @@
                         functions.setupDataChannel();
                     }
                 }
+
+                pc.onaddstream = event => {
+                    $('#user_video').srcObject = event.stream;
+                };
+
+                navigator.mediaDevices.getUserMedia({
+                    audio: true,
+                    video: true,
+                }).then(stream => {
+                    // Display your local video in #localVideo element
+                    my_video.srcObject = stream;
+                    // Add your stream to be sent to the conneting peer
+                    pc.addStream(stream);
+                }, error => console.error(error));
+
 
                 functions.startListentingToSignals();
 

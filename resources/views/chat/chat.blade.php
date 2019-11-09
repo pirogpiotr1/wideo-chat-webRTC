@@ -1,3 +1,11 @@
+<div class="video-inner">
+    <div class="video-wrapper" >
+        <video id="my_video" autoplay muted></video>
+        <video id="user_video" autoplay></video>
+    </div>
+
+</div>
+
 <div class="messages-inner">
     <div class="messages"></div>
     <form class="footer" onsubmit="return false;">
