@@ -47,6 +47,7 @@ class HomeController extends Controller
         header('Content-Type: application/json');
         $roomName = $request->input('room_name');
         $url = "https://api2.scaledrone.com/" . config('constants.CHANNEL_ID') . "/rooms";
+      //  var_dump($url);
         //   var_dump($url);
         $options = array(
             'http' => array(
@@ -57,7 +58,6 @@ class HomeController extends Controller
 
         $context = stream_context_create($options);
         $result = file_get_contents($url, false, $context);
-
         $room = null;
         if ($result === FALSE) { /* Handle error */
             echo json_encode([

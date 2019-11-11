@@ -42,6 +42,19 @@
                     }
                 });
 
+                drone.on('close', event => {
+                    console.log('closed by s1');
+
+                });
+
+                drone.on('disconnect', () => {
+                    console.log('User has disconnected');
+                });
+
+                drone.on('error', error => {
+                    console.log(error);
+                });
+
                 if (!room_s) {
                     room_s = 'observable-' + defaults.user_info.room_name;
                 }
@@ -51,20 +64,30 @@
                     if (error) {
                         return console.error(error);
                     }
-                    if( $('.card-body .GREEN').length ){
-                        $('.card-body .GREEN').remove();
+                    if( $('.card-body .GREEN.conn-info').length ){
+                        $('.card-body .conn-info').remove();
+                    }
+                    if( $('.card-body .leave-room').length ){
+                        $('.card-body .leave-room').remove();
                     }
 
-                    $('.card-body').prepend('<span class="GREEN">Connected to '+ room.name+' </span>')
+                    $('.card-body').prepend('<span class="GREEN conn-info">Connected to '+ room.name+' </span>')
+                    $('.card-body').prepend('<button class="leave-room">Leave Room</button>')
+                    $('.leave-room').on('click', function () {
+                       functions.leaveCurrentRoom();
+                    });
+
                     console.log('Connected to ' + room.name);
                 });
 
                 room.on('member_join', function (member) {
                     // Member object
+                    console.log('member_join');
                     $('.messages-inner').show();
                     $('.start-listening-inner').hide();
                 });
-                room.on('member_left', function (member) {
+                room.on('member_leave', function (member) {
+                    console.log('member_leave');
                     $('.messages-inner').hide();
                     $('.start-listening-inner').show();
                 });
@@ -111,7 +134,7 @@
                 }
 
                 pc.onaddstream = event => {
-                    $('#user_video').srcObject = event.stream;
+                    $('#user_video')[0].srcObject = event.stream;
                 };
 
                 navigator.mediaDevices.getUserMedia({
@@ -119,7 +142,7 @@
                     video: true,
                 }).then(stream => {
                     // Display your local video in #localVideo element
-                    my_video.srcObject = stream;
+                    $('#my_video')[0].srcObject = stream;
                     // Add your stream to be sent to the conneting peer
                     pc.addStream(stream);
                 }, error => console.error(error));
@@ -179,7 +202,7 @@
                 }
             },
             insertMessage: function (options, isFromMe) {
-
+                if(!options.content)return;
               //  let template = $('template_message[data-template="message"]');
 
              //   $('.message__bubble').text(options.content);
@@ -201,6 +224,7 @@
 
 
                $('.messages').append(clone);
+                $(".messages").scrollTop($(".messages")[0].scrollHeight);
 
                 // Scroll to bottom
               //  messagesEl.scrollTop = messagesEl.scrollHeight - messagesEl.clientHeight;
@@ -258,6 +282,13 @@
 
                     });
                 });
+            },
+            leaveCurrentRoom: function(){
+                room.unsubscribe();
+               // drone.unsubscribe(room.name);
+                $('.conn-info').remove();
+                $('.leave-room').remove();
+
             },
             init: function () {
 

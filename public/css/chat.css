@@ -3,6 +3,9 @@
 }
 .messages{
     margin-bottom: 15px;
+    max-height: 330px;
+    min-height: 330px;
+    overflow: auto;
 }
 .message{
     display: flex;
@@ -39,4 +42,24 @@
 
 .GREEN{
     color: #2d995b;
+}
+
+.video-wrapper{
+    display: flex;
+    position: relative;
+}
+
+#my_video{
+    display: block;
+    position: absolute;
+    top:0;
+    left:0;
+    max-width: 150px;
+    background: #1b1e21;
+}
+#user_video{
+    display: block;
+    width: 100%;
+    background: #6c757d;
+
 }
