@@ -81,15 +81,21 @@
                 });
 
                 room.on('member_join', function (member) {
-                    // Member object
-                    console.log('member_join');
                     $('.messages-inner').show();
                     $('.start-listening-inner').hide();
                 });
+
                 room.on('member_leave', function (member) {
-                    console.log('member_leave');
-                    $('.messages-inner').hide();
-                    $('.start-listening-inner').show();
+
+                    $('.messages-inner').fadeOut();
+                  //  $('.leave-room').fadeOut();
+                    $('.start-listening-inner').fadeIn();
+                    $("template_message:not('.no-visible')").remove();
+                    $('.card-body').prepend('<span class="GREEN leave-info">User left </span>');
+                    setTimeout(function(){
+                        $('.leave-info').slideDown().remove();
+                    }, 2000);
+
                 });
 
                 room.on('members', members => {
@@ -145,8 +151,7 @@
                     $('#my_video')[0].srcObject = stream;
                     // Add your stream to be sent to the conneting peer
                     pc.addStream(stream);
-                }, error => console.error(error));
-
+                }, error => console.log(error));
 
                 functions.startListentingToSignals();
 
@@ -288,7 +293,10 @@
                // drone.unsubscribe(room.name);
                 $('.conn-info').remove();
                 $('.leave-room').remove();
-
+                $('.messages-inner').fadeOut();
+                $('.leave-room').fadeOut();
+                $('.start-listening-inner').fadeIn();
+                $("template_message:not('.no-visible')").remove();
             },
             init: function () {
 

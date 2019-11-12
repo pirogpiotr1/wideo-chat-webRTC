@@ -47,7 +47,7 @@ class HomeController extends Controller
         header('Content-Type: application/json');
         $roomName = $request->input('room_name');
         $url = "https://api2.scaledrone.com/" . config('constants.CHANNEL_ID') . "/rooms";
-      //  var_dump($url);
+      //  var_dump($url)https://api2.scaledrone.com/L0YEtshct5737BhN/rooms;
         //   var_dump($url);
         $options = array(
             'http' => array(
