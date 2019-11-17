@@ -10,12 +10,14 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
+    <script src="{{ asset('js/app.js') }}" ></script>
 
-    <script src="{{ asset('/js/init.js') }}" defer></script>
+
     <script type='text/javascript' src='https://cdn.scaledrone.com/scaledrone.min.js'></script>
-    <script src="{{ asset('js/jq.min.js') }}"></script>
     <!-- Fonts -->
+    <script src="{{ asset('js/jq.min.js') }}"></script>
+
+    <script src="{{ asset('js/init.js') }}" ></script>
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
@@ -78,6 +80,11 @@
 
         <main class="py-4">
             @yield('content')
+
+                <div class="bt-spinner-inner">
+                    <div class="bt-spinner"></div>
+                </div>
+
         </main>
     </div>
 </body>

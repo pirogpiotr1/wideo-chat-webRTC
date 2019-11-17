@@ -59,6 +59,7 @@ class HomeController extends Controller
         $context = stream_context_create($options);
         $result = file_get_contents($url, false, $context);
         $room = null;
+        //var_dump($result);
         if ($result === FALSE) { /* Handle error */
             echo json_encode([
                 'success' => 'FALSE'

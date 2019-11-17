@@ -1,5 +1,5 @@
 .messages-inner{
-    display: none;
+
 }
 .messages{
     margin-bottom: 15px;
@@ -68,6 +68,47 @@
     padding: 1.25rem;
     display: flex;
     flex-direction: column;
+}
+.bt-spinner {
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    background-color: transparent;
+    border: 4px solid #222;
+    border-top-color: #009688;
+    -webkit-animation: 1s spin linear infinite;
+    animation: 1s spin linear infinite;
+
+
+}
+.bt-spinner-inner {
+
+    background: #000000bf;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+
+}
+.room-members{
+    width: 25%;
+    border:1px solid #ccc;
+}
+
+@-webkit-keyframes spin {
+    from { -webkit-transform: rotate(0deg); }
+    to { -webkit-transform: rotate(360deg); }
+}
+@keyframes spin {
+    from {transform:rotate(0deg);}
+    to {transform:rotate(360deg);}
 }
 
 
