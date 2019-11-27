@@ -21,15 +21,11 @@
     </div>
 </template_message>
 
-<div class="start-listening-inner">
-    <div class="start-listening-wraper">
-            <button id="start-listening" >FIND ROOM </button>
-    </div>
-
-</div>
 
 <script>
-    $(document).ready(function () {
+    $(window).on('load' , function(){
+
+
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -47,4 +43,5 @@
             }
         });
     });
+
 </script>

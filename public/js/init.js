@@ -1,7 +1,7 @@
 (function ($) {
     $.fn.initChat = function (options) {
 
-
+        const TEMP_ROOM_NAME = 'observable-temp';
         var defaults = {
 
             user_info: {
@@ -16,24 +16,7 @@
         };
         var drone = null;
 
-        function extend(callback){
             defaults = $.extend(defaults, options);
-             callback();
-
-        }
-
-        function initScaleDrone() {
-
-             drone = new ScaleDrone('L0YEtshct5737BhN', {
-                data: {
-                    name: defaults.user_info.name,
-                    id: defaults.user_id
-                }
-            });
-        }
-
-        extend(initScaleDrone);
-
 
         let room;
         let dataChannel;
@@ -51,33 +34,16 @@
 
         var functions = {
             waitForConnect: function (room_s = null) {
-                console.log('waitForConnect exe')
+                console.log('waitForConnect exe');
                 drone.on('open', error => {
-                    console.log('open');
+                    console.log('drone open');
                     if (error) {
                         return console.error(error);
                     }
                 });
 
-                drone.on('close', event => {
-                   // console.log()
-                    console.log('Connection closed:', event);
-                   // functions.waitForConnect('observable-temp');
-                });
 
-                drone.on('disconnect', () => {
-                    console.log('User has disconnected');
-                 //   functions.waitForConnect('observable-temp');
-                });
 
-                drone.on('reconnect', () => {
-                    console.log('User has reconnected');
-                //    functions.waitForConnect('observable-temp');
-                });
-                drone.on('error', error => {
-                    console.log(error);
-                 //   functions.waitForConnect('observable-temp');
-                });
 
               //  schowaj połączenia, zawadzają wyświetl wiadomosc, przeniesc informacje o polaczonym pokoju
 
@@ -85,6 +51,7 @@
                 room = drone.subscribe(room_s);
 
                 room.on('open', error => {
+                    console.log('room open');
                     if (error) {
                         return console.error(error);
                     }
@@ -95,7 +62,7 @@
                         $('.card-body .leave-room').remove();
                     }
 
-                    if (room.name !== 'observable-temp') {
+                    if (room.name !== TEMP_ROOM_NAME) {
                         $('.messages-inner').show();
                         $('.room-members').html('<span class="GREEN conn-info">Connected to ' + room.name + ' </span>')
                         $('.card-body').prepend('<button class="leave-room">Leave Room</button>');
@@ -107,11 +74,11 @@
                 });
 
                 room.on('member_join', function ({id,clientData}) {
-                    console.log('CD:');
-
-                    console.log(clientData);
-                    console.log(room.name);
-                    if  (room.name !== 'observable-temp') {
+                    console.log('member_join');
+                    if (!clientData){
+                        console.log('user data is empty !!!!')
+                    }
+                    if  (room.name !== TEMP_ROOM_NAME) {
                         $('.messages-inner').show();
 
                     }else{
@@ -121,8 +88,8 @@
                 });
 
                 room.on('member_leave', function ({id, clientData}) {
-                    console.log(room.name);
-                    if (room.name !== 'observable-temp') {
+                    console.log('member_leave ' + id);
+                    if (room.name !== TEMP_ROOM_NAME) {
                         // jesli ktos opuscil room to sie stad wynoismy rowniez
                         $('.messages-inner').fadeOut();
                         $('.leave-room').fadeOut();
@@ -132,8 +99,6 @@
                         alert('User left the chat');
 
                     }else{
-                        console.log('before slice')
-                        console.log(vars.members);
                         const index = vars.members.findIndex(member => member.id === id);
                       if(index >= 0)
                         vars.members.splice(index, 1);
@@ -143,8 +108,9 @@
                 });
 
                 room.on('members', members => {
-                    console.log(room.name);
-                    if (room.name !== 'observable-temp') {
+                    console.log('members');
+                    console.log(members);
+                    if (room.name !== TEMP_ROOM_NAME) {
                         const isOfferer = members.length >= 2;
                         functions.startWebRTC(isOfferer);
                     } else {
@@ -154,6 +120,25 @@
                         functions.tempRoomData();
                     }
 
+                });
+                drone.on('close', event => {
+                    // console.log()
+                    console.log('drone closed:');
+                    // functions.waitForConnect('observable-temp');
+                });
+
+                drone.on('disconnect', () => {
+                    console.log('drone has disconnected');
+                    //   functions.waitForConnect('observable-temp');
+                });
+
+                drone.on('reconnect', () => {
+                    console.log('drone has reconnected');
+                    //    functions.waitForConnect('observable-temp');
+                });
+                drone.on('error', error => {
+                    console.log(error);
+                    //   functions.waitForConnect('observable-temp');
                 });
             },
             sendSignalingMessage: function (message) {
@@ -187,20 +172,7 @@
                         functions.setupDataChannel();
                     }
                 }
-                //
-                // pc.onaddstream = event => {
-                //     $('#user_video')[0].srcObject = event.stream;
-                // };
-                //
-                // navigator.mediaDevices.getUserMedia({
-                //     audio: true,
-                //     video: true,
-                // }).then(stream => {
-                //     // Display your local video in #localVideo element
-                //     $('#my_video')[0].srcObject = stream;
-                //     // Add your stream to be sent to the conneting peer
-                //     pc.addStream(stream);
-                // }, error => console.log(error));
+
 
                 functions.startListentingToSignals();
 
@@ -333,9 +305,9 @@
                 });
             },
             leaveCurrentRoom: function () {
+                console.log('leaveCurrentRoom');
                 let name = room.name;
                 room.unsubscribe();
-                extend(initScaleDrone);
                 // drone.unsubscribe(room.name);
                 $('.conn-info').remove();
                 $('.leave-room').remove();
@@ -344,15 +316,15 @@
               //  $('.start-listening-inner').fadeIn();
                 $("template_message:not('.no-visible')").remove();
                 //wracamy do pokoju temporary
-                if( name !== 'observable-temp') {
+                if( name !== TEMP_ROOM_NAME) {
 
-                    functions.waitForConnect('observable-temp');
+                    functions.waitForConnect(TEMP_ROOM_NAME);
                 }
             },
             updateRoomMembers: function () {
-                console.log(vars.members);
-                $('.navbar').html(vars.members);
-                if(room.name === 'observable-temp') {
+                console.log('updateRoomMembers');
+
+                if(room.name === TEMP_ROOM_NAME) {
 
                     $('.room-members').html('');
 
@@ -467,8 +439,14 @@
                 functions.sendSignalingMessage(data);
             },
             init: function () {
+                drone = new ScaleDrone("L0YEtshct5737BhN", {
+                    data: {
+                        name: defaults.user_info.name,
+                        id: defaults.user_id
+                    }
+                });
 
-                functions.waitForConnect('observable-temp');
+                functions.waitForConnect(TEMP_ROOM_NAME);
                 functions.sendMessageEvent();
                // functions.startListening();
                 //let refresh_members = window.setInterval(functions.updateRoomMembers(), 500);
