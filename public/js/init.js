@@ -99,8 +99,9 @@
                         $('.leave-room').fadeOut();
                         $("template_message:not('.no-visible')").remove();
                         functions.leaveCurrentRoom();
-
+                        pc.close();
                         alert('User left the chat');
+
 
                     }else{
                         const index = vars.members.findIndex(member => member.id === id);
@@ -180,15 +181,7 @@
                     $('#user_video')[0].srcObject = event.stream;
                 };
 
-                navigator.mediaDevices.getUserMedia({
-                    audio: true,
-                    video: true,
-                }).then(stream => {
-                    // Display your local video in #localVideo element
-                    $('#my_video')[0].srcObject = stream;
-                    // Add your stream to be sent to the conneting peer
-                    pc.addStream(stream);
-                }, error => console.log(error));
+
                 //
                 pc.onaddstream = event => {
                     $('#user_video')[0].srcObject = event.stream;
@@ -336,6 +329,7 @@
             },
             leaveCurrentRoom: function () {
                 console.log('leaveCurrentRoom');
+
                 let name = room.name;
                 room.unsubscribe();
                 // drone.unsubscribe(room.name);
@@ -347,7 +341,7 @@
                 $("template_message:not('.no-visible')").remove();
                 //wracamy do pokoju temporary
                 if( name !== TEMP_ROOM_NAME) {
-
+                    pc.close();
                     functions.waitForConnect(TEMP_ROOM_NAME);
                 }
             },
@@ -478,6 +472,16 @@
 
                 functions.waitForConnect(TEMP_ROOM_NAME);
                 functions.sendMessageEvent();
+                
+                navigator.mediaDevices.getUserMedia({
+                    audio: true,
+                    video: true,
+                }).then(stream => {
+                    // Display your local video in #localVideo element
+                    $('#my_video')[0].srcObject = stream;
+                    // Add your stream to be sent to the conneting peer
+                    pc.addStream(stream);
+                }, error => console.log(error));
                // functions.startListening();
                 //let refresh_members = window.setInterval(functions.updateRoomMembers(), 500);
             }
