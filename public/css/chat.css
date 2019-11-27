@@ -1,6 +1,16 @@
 .messages-inner{
     display: none;
 }
+.member-event{
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.member-event:hover{
+    background:#2d995b;
+    color:#f8f9fa;
+}
+
 .messages{
     margin-bottom: 15px;
     max-height: 330px;

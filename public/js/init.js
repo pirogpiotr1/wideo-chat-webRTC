@@ -89,6 +89,10 @@
 
                 room.on('member_leave', function ({id, clientData}) {
                     console.log('member_leave ' + id);
+                    if(id === drone.clientId){
+                        functions.waitForConnect(TEMP_ROOM_NAME);
+                    }
+
                     if (room.name !== TEMP_ROOM_NAME) {
                         // jesli ktos opuscil room to sie stad wynoismy rowniez
                         $('.messages-inner').fadeOut();
@@ -172,7 +176,33 @@
                         functions.setupDataChannel();
                     }
                 }
+                pc.onaddstream = event => {
+                    $('#user_video')[0].srcObject = event.stream;
+                };
 
+                navigator.mediaDevices.getUserMedia({
+                    audio: true,
+                    video: true,
+                }).then(stream => {
+                    // Display your local video in #localVideo element
+                    $('#my_video')[0].srcObject = stream;
+                    // Add your stream to be sent to the conneting peer
+                    pc.addStream(stream);
+                }, error => console.log(error));
+                //
+                pc.onaddstream = event => {
+                    $('#user_video')[0].srcObject = event.stream;
+                };
+
+                navigator.mediaDevices.getUserMedia({
+                    audio: true,
+                    video: true,
+                }).then(stream => {
+                    // Display your local video in #localVideo element
+                    $('#my_video')[0].srcObject = stream;
+                    // Add your stream to be sent to the conneting peer
+                    pc.addStream(stream);
+                }, error => console.log(error));
 
                 functions.startListentingToSignals();
 
