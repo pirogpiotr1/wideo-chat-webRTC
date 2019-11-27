@@ -472,7 +472,7 @@
 
                 functions.waitForConnect(TEMP_ROOM_NAME);
                 functions.sendMessageEvent();
-                
+
                 navigator.mediaDevices.getUserMedia({
                     audio: true,
                     video: true,
